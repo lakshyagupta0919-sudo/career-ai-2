@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerAI - AI Resume Analyzer</title>
+  <meta name="description" content="Analyze Your Resume and Improve Your Career Opportunities with AI-driven insights, skill detection, scoring, and career recommendations.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <!-- PDF.js for Client-side PDF Text Extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div class="logo-text">
+          <span class="brand-name">Career<span>AI</span></span>
+          <span class="brand-tag">Resume Intelligence</span>
+        </div>
+      </div>
+      <div class="nav-badge">
+        <span class="pulse-dot"></span>
+        <span>100% Client-Side & Private</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="badge-pill">
+        <i class="fa-solid fa-bolt"></i> Next-Gen Career Optimization
+      </div>
+      <h1 class="hero-title">
+        AI Resume <span class="gradient-text">Analyzer</span>
+      </h1>
+      <p class="hero-subtitle">
+        Analyze Your Resume and Improve Your Career Opportunities
+      </p>
+      <div class="hero-highlights">
+        <div class="highlight-item"><i class="fa-solid fa-circle-check"></i> Instant ATS Score</div>
+        <div class="highlight-item"><i class="fa-solid fa-circle-check"></i> Skill Gap Analysis</div>
+        <div class="highlight-item"><i class="fa-solid fa-circle-check"></i> Role Recommendations</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace / App Container -->
+  <main class="container main-content">
+    
+    <!-- Input Section: Upload & Configuration Card -->
+    <section class="card input-card">
+      <div class="card-header">
+        <div class="header-icon purple">
+          <i class="fa-solid fa-file-invoice"></i>
+        </div>
+        <div>
+          <h2>Resume Submission & Role Target</h2>
+          <p class="card-desc">Upload your PDF resume or paste raw text, then select your desired target role.</p>
+        </div>
+      </div>
+
+      <!-- Quick Sample Loader -->
+      <div class="sample-resumes-bar">
+        <span class="sample-label"><i class="fa-solid fa-flask"></i> Quick Demo Resumes:</span>
+        <div class="sample-buttons">
+          <button type="button" class="btn-sample" data-sample="data-analyst">
+            <i class="fa-solid fa-chart-pie"></i> Data Analyst
+          </button>
+          <button type="button" class="btn-sample" data-sample="python-dev">
+            <i class="fa-brands fa-python"></i> Python Dev
+          </button>
+          <button type="button" class="btn-sample" data-sample="business-analyst">
+            <i class="fa-solid fa-briefcase"></i> Business Analyst
+          </button>
+          <button type="button" class="btn-sample" data-sample="ai-ml">
+            <i class="fa-solid fa-brain"></i> AI/ML Engineer
+          </button>
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <!-- Target Role Selection -->
+        <div class="form-group role-selector-group">
+          <label for="jobRole" class="form-label">
+            <span class="step-num">1</span>
+            <span>Target Job Role <strong class="required">*</strong></span>
+          </label>
+          <div class="select-wrapper">
+            <select id="jobRole" class="custom-select">
+              <option value="Data Analyst" selected>Data Analyst</option>
+              <option value="Python Developer">Python Developer</option>
+              <option value="Business Analyst">Business Analyst</option>
+              <option value="AI/ML Engineer">AI/ML Engineer</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+          </div>
+          <div class="role-skills-preview" id="roleSkillsPreview">
+            <span class="preview-label">Core benchmarks:</span>
+            <span class="preview-tags" id="previewTags">SQL, Python, Excel, Tableau, Power BI, Statistics...</span>
+          </div>
+        </div>
+
+        <!-- PDF Upload Zone -->
+        <div class="form-group upload-group">
+          <label class="form-label">
+            <span class="step-num">2</span>
+            <span>Upload Resume (PDF)</span>
+          </label>
+          <div class="upload-dropzone" id="dropZone">
+            <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content" id="dropzoneDefault">
+              <div class="upload-icon-circle">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div class="dropzone-text">
+                <span class="upload-primary-text">Click to browse or drop your PDF</span>
+                <span class="upload-sub-text">Supports PDF format (Max 10MB)</span>
+              </div>
+            </div>
+            <!-- Uploading/Success Status -->
+            <div class="dropzone-status hidden" id="dropzoneStatus">
+              <div class="file-info-badge">
+                <i class="fa-solid fa-file-pdf pdf-icon"></i>
+                <div class="file-meta">
+                  <span class="file-name" id="fileName">resume.pdf</span>
+                  <span class="file-size" id="fileSize">0 KB</span>
+                </div>
+                <button type="button" class="btn-remove-file" id="btnRemoveFile" title="Remove File">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <div class="pdf-parse-status" id="pdfParseStatus">
+                <i class="fa-solid fa-spinner fa-spin"></i> Extracting text...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Box Paste Area -->
+      <div class="form-group text-paste-group">
+        <div class="textarea-header">
+          <label for="resumeText" class="form-label">
+            <span class="step-num">3</span>
+            <span>Resume Content (Paste text or review extracted content) <strong class="required">*</strong></span>
+          </label>
+          <div class="textarea-actions">
+            <span class="word-counter" id="wordCount">0 words / 0 chars</span>
+            <button type="button" class="btn-text-action" id="btnClearText" title="Clear text area">
+              <i class="fa-solid fa-eraser"></i> Clear Text
+            </button>
+          </div>
+        </div>
+        <textarea 
+          id="resumeText" 
+          class="custom-textarea" 
+          rows="10" 
+          placeholder="Paste your resume content here (Work experience, education, technical skills, projects, certifications)... or upload a PDF above to extract text automatically."></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-row">
+        <button type="button" class="btn-primary" id="btnAnalyze">
+          <i class="fa-solid fa-microchip"></i>
+          <span>Analyze Resume</span>
+        </button>
+        <button type="button" class="btn-secondary" id="btnClearAll">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Clear All</span>
+        </button>
+      </div>
+
+      <!-- Notification Banner -->
+      <div id="statusAlert" class="status-alert hidden" role="alert"></div>
+    </section>
+
+    <!-- Results Section: Modern Dashboard -->
+    <section class="results-wrapper hidden" id="resultsSection">
+      
+      <!-- Dashboard Top Header Bar -->
+      <div class="dashboard-header-bar">
+        <div>
+          <div class="badge-role" id="resultsRoleBadge">Target Role: Data Analyst</div>
+          <h2 class="dashboard-title">Analysis & Career Intelligence Dashboard</h2>
+          <p class="dashboard-subtitle" id="resultsTimestamp">Generated just now</p>
+        </div>
+        <div class="dashboard-actions">
+          <button type="button" class="btn-outline" id="btnPrintReport">
+            <i class="fa-solid fa-print"></i> Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Modern Colorful Metric Cards (Row 1) -->
+      <div class="metric-cards-grid">
+        
+        <!-- Score Card with Radial Progress Ring -->
+        <div class="metric-card score-card">
+          <div class="card-corner-icon">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <span class="metric-label">Overall Resume Score</span>
+          <div class="score-display">
+            <div class="score-circle-container">
+              <svg class="score-ring" width="130" height="130" viewBox="0 0 130 130">
+                <circle class="score-ring-bg" cx="65" cy="65" r="54" />
+                <circle class="score-ring-bar" id="scoreRingProgress" cx="65" cy="65" r="54" />
+              </svg>
+              <div class="score-center-text">
+                <span class="score-num" id="scoreValue">0</span>
+                <span class="score-total">/100</span>
+              </div>
+            </div>
+            <div class="score-verdict-box">
+              <span class="score-badge" id="scoreRatingBadge">Calculating</span>
+              <p class="score-summary" id="scoreSummary">Resume evaluation in progress</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Match Card -->
+        <div class="metric-card blue-card">
+          <div class="metric-top">
+            <div class="metric-icon-box blue">
+              <i class="fa-solid fa-bullseye"></i>
+            </div>
+            <span class="metric-badge-sm" id="matchRateBadge">0%</span>
+          </div>
+          <span class="metric-label">Target Role Skill Match</span>
+          <div class="metric-value-row">
+            <span class="metric-large-num" id="detectedSkillsCount">0</span>
+            <span class="metric-subtext" id="roleTotalSkills">of 0 key skills</span>
+          </div>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-fill blue" id="skillMatchProgress" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Experience & Impact Card -->
+        <div class="metric-card purple-card">
+          <div class="metric-top">
+            <div class="metric-icon-box purple">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <span class="metric-badge-sm" id="impactRating">Strong</span>
+          </div>
+          <span class="metric-label">Quantified Impact</span>
+          <div class="metric-value-row">
+            <span class="metric-large-num" id="metricsDetectedCount">0</span>
+            <span class="metric-subtext">metrics & metrics found</span>
+          </div>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-fill purple" id="impactProgress" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Resume Structure & Formatting Card -->
+        <div class="metric-card teal-card">
+          <div class="metric-top">
+            <div class="metric-icon-box teal">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <span class="metric-badge-sm" id="sectionsRating">Complete</span>
+          </div>
+          <span class="metric-label">ATS Structure & Sections</span>
+          <div class="metric-value-row">
+            <span class="metric-large-num" id="sectionsCount">0</span>
+            <span class="metric-subtext">key sections detected</span>
+          </div>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-fill teal" id="sectionsProgress" style="width: 0%;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Skills Breakdown Section (Row 2) -->
+      <div class="dashboard-two-col">
+        
+        <!-- Detected Skills Card -->
+        <div class="card skill-card-detected">
+          <div class="card-header">
+            <div class="header-icon green">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <h3>Detected Skills</h3>
+              <p class="card-desc">Competencies, technologies, and soft skills identified in your resume.</p>
+            </div>
+          </div>
+          <div class="skills-filter-tags">
+            <button type="button" class="filter-chip active" data-filter="all">All (<span id="allSkillsCount">0</span>)</button>
+            <button type="button" class="filter-chip" data-filter="role">Target Role (<span id="roleMatchCount">0</span>)</button>
+            <button type="button" class="filter-chip" data-filter="bonus">Additional Tech (<span id="bonusCount">0</span>)</button>
+            <button type="button" class="filter-chip" data-filter="soft">Soft Skills (<span id="softSkillsCount">0</span>)</button>
+          </div>
+          <div class="skills-tag-cloud" id="detectedSkillsContainer">
+            <!-- Dynamic skills injected here -->
+          </div>
+        </div>
+
+        <!-- Missing Skills Card -->
+        <div class="card skill-card-missing">
+          <div class="card-header">
+            <div class="header-icon rose">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h3>Missing Skills for Target Role</h3>
+              <p class="card-desc">High-value keywords and tools recruiters look for in this position.</p>
+            </div>
+          </div>
+          <div class="missing-skills-note">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Adding these keywords can substantially boost ATS screen ranking.</span>
+          </div>
+          <div class="skills-tag-cloud" id="missingSkillsContainer">
+            <!-- Dynamic missing skills injected here -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Strengths & Suggestions Grid (Row 3) -->
+      <div class="dashboard-two-col">
+        
+        <!-- Resume Strengths -->
+        <div class="card strengths-card">
+          <div class="card-header">
+            <div class="header-icon emerald">
+              <i class="fa-solid fa-thumbs-up"></i>
+            </div>
+            <div>
+              <h3>Resume Strengths</h3>
+              <p class="card-desc">Key highlights and competitive advantages found in your profile.</p>
+            </div>
+          </div>
+          <ul class="strengths-list" id="strengthsList">
+            <!-- Dynamic strengths items -->
+          </ul>
+        </div>
+
+        <!-- Suggestions for Improvement -->
+        <div class="card suggestions-card">
+          <div class="card-header">
+            <div class="header-icon amber">
+              <i class="fa-solid fa-compass-drafting"></i>
+            </div>
+            <div>
+              <h3>Suggestions for Improvement</h3>
+              <p class="card-desc">Actionable tips to raise your resume score and interview callbacks.</p>
+            </div>
+          </div>
+          <ul class="suggestions-list" id="suggestionsList">
+            <!-- Dynamic suggestions items -->
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Career Recommendations (Row 4) -->
+      <div class="card career-recommendations-card">
+        <div class="card-header">
+          <div class="header-icon purple">
+            <i class="fa-solid fa-route"></i>
+          </div>
+          <div>
+            <h3>Career Recommendations</h3>
+            <p class="card-desc">Alternative and complementary career paths tailored to your detected skill profile.</p>
+          </div>
+        </div>
+        <div class="career-cards-grid" id="careerRecommendationsGrid">
+          <!-- Dynamic career recommendation cards injected here -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon small">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <span class="brand-name">Career<span>AI</span></span>
+        </div>
+        <p class="footer-tagline">AI Resume Analyzer &bull; Smart, Modern, and Private Career Insights.</p>
+      </div>
+      <div class="footer-meta">
+        <p class="privacy-note"><i class="fa-solid fa-lock"></i> All analysis runs locally in your browser. No personal data is stored or uploaded to external servers.</p>
+        <p class="copyright">&copy; 2026 CareerAI. Built for career growth.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
